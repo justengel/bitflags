@@ -482,6 +482,7 @@ def test_iterator():
 def test_get_set_flags():
     class CustomFlags(BitFlags):
         options = {0: 'logout', 1: 'login', 2: 'profile', 3: 'Custom Action'}
+        byteorder = 'big'
 
     f = CustomFlags(0b11)
     assert f.get_flags() == ['logout', 'login']
@@ -491,6 +492,14 @@ def test_get_set_flags():
 
     f.set_flags(1)
     assert f.get_flags() == ['logout']
+
+    f.set_flags(b'\x00\x03')  # 0b11
+    assert f.get_flags() == ['logout', 'login']
+
+    f.value = 0
+    f.byteorder = 'little'
+    f.set_flags(b'\x03\x00')  # 0b11
+    assert f.get_flags() == ['logout', 'login']
 
 
 def test_data_types():

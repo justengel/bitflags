@@ -204,9 +204,17 @@ class BitFlags(ctypes.Union, metaclass=BitFlagsMetaclass):
         """Set the bit flags.
 
         Args:
-            value (int/str/list/tuple): Integer value or list of string options to set.
+            value (bytes/int/str/list/tuple): Bytes value, integer value, or list of string options to set.
         """
-        if isinstance(value, int):
+        if isinstance(value, bytes):
+            byteorder = getattr(self, 'byteorder', None)
+            if byteorder is None:
+                byteorder = getattr(self, 'endian', 'big')
+            signed = getattr(self, 'signed', False)
+            self.value = int.from_bytes(value, byteorder=byteorder, signed=signed)
+            return
+
+        elif isinstance(value, int):
             self.value = value
             return
 

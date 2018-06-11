@@ -343,6 +343,31 @@ class BitFlags(ctypes.Union, metaclass=BitFlagsMetaclass):
         bit_flags.signed = signed
         return bit_flags
 
+    # ===== Iterator =====
+    def __iter__(self):
+        """Iterate through every bit's value."""
+        self.__index__ = 0
+        return self
+
+    def __next__(self):
+        """Return the value of the next bit."""
+        idx = self.__index__
+        self.__index__ += 1
+
+        if idx >= self.nbytes * 8:
+            self.__index__ = 0
+            raise StopIteration
+
+        try:
+            return getattr(self, 'bit_'+str(idx))
+        except AttributeError:
+            self.__index__ = 0
+            raise StopIteration
+
+    def next(self):
+        """Return the value of the next bit."""
+        return self.__next__()
+
 
 class bitflags(BitFlags):
     """Create a dynamic bit flags object.

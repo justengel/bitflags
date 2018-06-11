@@ -464,6 +464,21 @@ def test_pattern():
     assert hasattr(f, 'b15')
 
 
+def test_iterator():
+    class CustomFlags(BitFlags):
+        nbytes = 2
+
+
+    f = CustomFlags(0b101)
+
+    # Iterate through the bit values.
+    for i, val in enumerate(f):
+        if i == 0 or i == 2:
+            assert val == 1
+        else:
+            assert val == 0
+
+
 def test_get_flags():
     class CustomFlags(BitFlags):
         options = {0: 'logout', 1: 'login', 2: 'profile', 3: 'Custom Action'}

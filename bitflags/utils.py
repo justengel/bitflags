@@ -2,7 +2,7 @@ import re
 import ctypes
 
 
-__all__ = ['str_to_var_name',
+__all__ = ['str_to_var_name', 'format_pattern',
            'order_flag_options', 'order_flag_field', 'order_flag_c_field',
            'dynamicmethod']
 
@@ -37,6 +37,19 @@ def str_to_var_name(name):
     var_name = var_name.replace('__', '_')
 
     return var_name
+
+
+def format_pattern(bit, pattern):
+    """Return a string that is formatted with the given bit using either % or .format on the given pattern."""
+    try:
+        if "%" in pattern:
+            return pattern % bit
+    except:
+        pass
+    try:
+        return pattern.format(bit)
+    except:
+        return pattern
 
 
 def order_flag_options(key, value):

@@ -422,6 +422,48 @@ def test_value_and_bits():
     check_bit_value(f, 6534)
 
 
+def test_pattern():
+    class CustomFlags(BitFlags):
+        pattern = '%i'
+
+    f = CustomFlags(0xff)
+    assert f.value == 0xff
+    assert f.get_flags() == ['0', '1', '2', '3', '4', '5', '6', '7']
+
+    # Test string format with .format
+    class CustomFlags(BitFlags):
+        pattern = '{:}'
+
+    f = CustomFlags(0xff)
+    assert f.value == 0xff
+    assert f.get_flags() == ['0', '1', '2', '3', '4', '5', '6', '7']
+
+    # Test multiple bytes
+    class CustomFlags(BitFlags):
+        pattern = 'B%i'
+        nbytes = 2
+
+    f = CustomFlags(0xff)
+    assert f.value == 0xff
+    assert f.get_flags() == ['B0', 'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7']
+    assert hasattr(f, 'b0')
+    assert hasattr(f, 'b1')
+    assert hasattr(f, 'b2')
+    assert hasattr(f, 'b3')
+    assert hasattr(f, 'b4')
+    assert hasattr(f, 'b5')
+    assert hasattr(f, 'b6')
+    assert hasattr(f, 'b7')
+    assert hasattr(f, 'b8')
+    assert hasattr(f, 'b9')
+    assert hasattr(f, 'b10')
+    assert hasattr(f, 'b11')
+    assert hasattr(f, 'b12')
+    assert hasattr(f, 'b13')
+    assert hasattr(f, 'b14')
+    assert hasattr(f, 'b15')
+
+
 def test_get_flags():
     class CustomFlags(BitFlags):
         options = {0: 'logout', 1: 'login', 2: 'profile', 3: 'Custom Action'}
@@ -480,6 +522,7 @@ if __name__ == '__main__':
     test_field_options()
     test_update_fields()
     test_value_and_bits()
+    test_pattern()
     test_get_flags()
     test_data_types()
     test_from_bytes()

@@ -1,7 +1,7 @@
 import collections
 import ctypes
 from itertools import chain
-from .utils import order_flag_options, order_flag_field, dynamicmethod
+from .utils import str_to_var_name, format_pattern, order_flag_options, order_flag_field, dynamicmethod
 from .flag_bits import FlagBits8, FlagBits16, FlagBits32, FlagBits64, FLAG_BITS_SELECTOR
 
 
@@ -22,6 +22,18 @@ class BitFlagsMetaclass(type(ctypes.Union)):
             >>>                 ("bit_0", ctypes.c_uint8, 1),  # asByte & 1
             >>>                 ('bit_1', ctypes.c_uint8, 1),  # asByte & 2
             >>>                 ]
+
+    Attributes:
+        options (OrderedDict): Dictionary of bit (int) key and a display name (str) value mapping.
+            This is used in get_flags.
+        fields (OrderedDict): Dictionary of variable name (str) key and bit (int) value mapping.
+            This gives attribute access to the bits you want to get or set.
+        nbytes (int): Number of bytes for this value. This also indicates that you can access
+            bit_0, bit_1, bit_2 to bit_(nbytes * 8).
+        nbits (int): The users set number of bits or just the total number of bits that are accessible.
+        pattern (str)[None]: Pattern to map options to. Example: 'Bit %i' will make 'Bit 0', 'Bit 1', 'Bit 2' as options
+        byteorder (str)['big']: Argument when converting to bytes ('big' or 'little').
+        signed (bool)[False]: Key word argument for when converting to bytes.
     """
     def __new__(mcls, name, bases, attrs):
         nbytes = 1
@@ -68,6 +80,17 @@ class BitFlagsMetaclass(type(ctypes.Union)):
                 nbytes = max(int((nbits + 7) // 8), nbytes)
             except (KeyError, ValueError, TypeError):
                 pass
+
+        # Format the pattern argument into options and fields.
+        if 'pattern' in attrs:
+            pattern = attrs['pattern']
+            for i in range(nbytes*8):
+                if i not in options:
+                    bit_pat = format_pattern(i, pattern)
+                    options[i] = bit_pat
+                    var_name = str_to_var_name(bit_pat)
+                    if var_name:
+                        fields[var_name] = i
 
         # ===== Create the Union =====
         # Get the FlagBits type and int type (c_uint8, c_uint16, ...)
@@ -144,6 +167,7 @@ class BitFlags(ctypes.Union, metaclass=BitFlagsMetaclass):
         nbytes (int): Number of bytes for this value. This also indicates that you can access
             bit_0, bit_1, bit_2 to bit_(nbytes * 8).
         nbits (int): The users set number of bits or just the total number of bits that are accessible.
+        pattern (str)[None]: Pattern to map options to. Example: 'Bit %i' will make 'Bit 0', 'Bit 1', 'Bit 2' as options
         byteorder (str)['big']: Argument when converting to bytes ('big' or 'little').
         signed (bool)[False]: Key word argument for when converting to bytes.
     """
@@ -346,10 +370,11 @@ class bitflags(BitFlags):
         nbytes (int): Number of bytes for this value. This also indicates that you can access
             bit_0, bit_1, bit_2 to bit_(nbytes * 8).
         nbits (int): The users set number of bits or just the total number of bits that are accessible.
+        pattern (str)[None]: Pattern to map options to. Example: 'Bit %i' will make 'Bit 0', 'Bit 1', 'Bit 2' as options
         byteorder (str)['big']: Argument when converting to bytes ('big' or 'little').
         signed (bool)[False]: Key word argument for when converting to bytes.
     """
-    def __new__(cls, value=0, options=None, fields=None, nbytes=None, nbits=None, **kwargs):
+    def __new__(cls, value=0, options=None, fields=None, nbytes=None, nbits=None, pattern=None, **kwargs):
         """Create a new dynamic BitFlags class and instance.
 
         Args:
@@ -358,6 +383,7 @@ class bitflags(BitFlags):
             fields (dict/list)[None]: variable_name (str) and bit (int) pairs to map a variable name to a specific bit.
             nbytes (int)[None]: Number of bytes.
             nbits (int)[None]: Number of bits.
+            pattern (str)[None]: Pattern to map options to. Example: 'Bit %i' will make 'Bit 0', 'Bit 1', 'Bit 2' as options
             kwargs (dict): Dictionary of Initial values for the fields. 'bit_0=1', 'bit_1=1', 'my_flag'=1, ...
         """
         # Check to use the normal BitFlags __new__
@@ -370,9 +396,11 @@ class bitflags(BitFlags):
             #     fields = fields
             #     nbytes = nbytes
             #     nbits = nbits
+            #     pattern = pattern
             #     __new__ = BitFlags.__new__
             CustomBitFlags = type('CustomBitFlags', (bitflags,),
-                                  {'options': options, 'fields': fields, 'nbytes': nbytes, 'nbits': 'nbits',
+                                  {'options': options, 'fields': fields, 'nbytes': nbytes, 'nbits': nbits,
+                                   'pattern': pattern,
                                    '__new__': BitFlags.__new__})
 
             obj = super().__new__(CustomBitFlags, value=value, **kwargs)
@@ -383,7 +411,7 @@ class bitflags(BitFlags):
 
         return obj
 
-    def __init__(self, value=0, options=None, fields=None, nbytes=None, nbits=None, **kwargs):
+    def __init__(self, value=0, options=None, fields=None, nbytes=None, nbits=None, pattern=None, **kwargs):
         """Create a new dynamic BitFlags class and instance.
 
         Args:
@@ -392,6 +420,7 @@ class bitflags(BitFlags):
             fields (dict/list)[None]: variable_name (str) and bit (int) pairs to map a variable name to a specific bit.
             nbytes (int)[None]: Number of bytes.
             nbits (int)[None]: Number of bits.
+            pattern (str)[None]: Pattern to map options to. Example: 'Bit %i' will make 'Bit 0', 'Bit 1', 'Bit 2' as options
             kwargs (dict): Dictionary of Initial values for the fields. 'bit_0=1', 'bit_1=1', 'my_flag'=1, ...
         """
         super().__init__(value=value, **kwargs)

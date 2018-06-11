@@ -85,6 +85,28 @@ s2 = SpecialFlags(1)
 assert s.get_flags() == ["2% System Failure"]
 ```
 
+You can also make a pattern for options.
+
+```python
+from bitflags import BitFlags
+
+
+class MyFlags(BitFlags):
+    pattern = '%i'
+
+f = MyFlags()
+f.value = 0b101  # 5 - bin(5) shows the bit values (0b101)
+assert f.value == 0b101
+
+# Get a list of flag options
+assert f.get_flags() == ['0', '2']
+
+# Convert to use the data types
+assert str(f) == '0, 2'
+assert int(f) == 5
+assert bytes(f) == b'\x05'
+```
+
 
 ## Example - bitflags
 The one time object bit flags. This is basically the same thing as BitFlags only the instance constructor allows you 

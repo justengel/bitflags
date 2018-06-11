@@ -43,11 +43,11 @@ requirements = parse_requirements('requirements.txt')
 
 if __name__ == "__main__":
     setup(name="bitflags",
-          version="1.0.2",
+          version="1.0.3",
           description="Bit flags implementation using a C Union. This library removes the need to use ctypes and helps "
                       "you quickly access what bits are toggled.",
           url="https://github.com/justengel/bitflags",
-          download_url="https://github.com/justengel/bitflags/archive/v1.0.2.tar.gz",
+          download_url="https://github.com/justengel/bitflags/archive/v1.0.3.tar.gz",
 
           keywords=["bit", "flags", "Union", "bitflags"],
 

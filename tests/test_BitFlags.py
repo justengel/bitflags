@@ -479,12 +479,18 @@ def test_iterator():
             assert val == 0
 
 
-def test_get_flags():
+def test_get_set_flags():
     class CustomFlags(BitFlags):
         options = {0: 'logout', 1: 'login', 2: 'profile', 3: 'Custom Action'}
 
     f = CustomFlags(0b11)
     assert f.get_flags() == ['logout', 'login']
+
+    f.set_flags(['profile', 'Custom Action'])
+    assert f.get_flags() == ['profile', 'Custom Action']
+
+    f.set_flags(1)
+    assert f.get_flags() == ['logout']
 
 
 def test_data_types():
@@ -538,7 +544,7 @@ if __name__ == '__main__':
     test_update_fields()
     test_value_and_bits()
     test_pattern()
-    test_get_flags()
+    test_get_set_flags()
     test_data_types()
     test_from_bytes()
     print("All tests finished successfully!")

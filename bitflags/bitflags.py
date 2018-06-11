@@ -200,6 +200,35 @@ class BitFlags(ctypes.Union, metaclass=BitFlagsMetaclass):
         for var_name in kwargs:
             setattr(self, var_name, kwargs[var_name])
 
+    def set_flags(self, value):
+        """Set the bit flags.
+
+        Args:
+            value (int/str/list/tuple): Integer value or list of string options to set.
+        """
+        if isinstance(value, int):
+            self.value = value
+            return
+
+        elif not isinstance(value, (list, tuple)):
+            value = [value]
+
+        # Reset the value to 0
+        self.value = 0
+
+        # Loop through and set the bits for the found option/field names
+        options = list(self.options.values())
+        option_bits = list(self.options.keys())
+        fields = list(self.fields.keys())
+        for name in value:
+            if name in fields:
+                bit = self.fields[name]
+                setattr(self, 'bit_'+str(bit), 1)
+            elif name in options:
+                idx = options.index(name)
+                bit = option_bits[idx]
+                setattr(self, 'bit_'+str(bit), 1)
+
     def get_flags(self):
         """Return a list of flag names that are set/True."""
         return [self.options[bit] for name, bit in self.fields.items()

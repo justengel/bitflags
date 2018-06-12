@@ -82,7 +82,7 @@ class BitFlagsMetaclass(type(ctypes.Union)):
                 pass
 
         # Format the pattern argument into options and fields.
-        if 'pattern' in attrs:
+        if 'pattern' in attrs and attrs['pattern']:
             pattern = attrs['pattern']
             for i in range(nbytes*8):
                 if i not in options:

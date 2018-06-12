@@ -5,7 +5,7 @@ from .utils import str_to_var_name, format_pattern, order_flag_options, order_fl
 from .flag_bits import FlagBits8, FlagBits16, FlagBits32, FlagBits64, FLAG_BITS_SELECTOR
 
 
-__all__ = ['BitFlags', 'bitflags']
+__all__ = ['BitFlagsMetaclass', 'BitFlags', 'bitflags']
 
 
 class BitFlagsMetaclass(type(ctypes.Union)):

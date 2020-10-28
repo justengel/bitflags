@@ -1,0 +1,6 @@
+name = 'bitflags'
+version = '1.1.0'
+description = 'Bit flags implementation using a C Union. This library removes the need to use ctypes and helps you quickly access what bits are toggled.'
+url = 'https://github.com/justengel/bitflags'
+author = 'Justin Engel'
+author_email = 'jtengel08@gmail.com'

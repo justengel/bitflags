@@ -307,6 +307,9 @@ class BitFlags(ctypes.Union, metaclass=BitFlagsMetaclass):
     def __int__(self):
         return self.value
 
+    def __repr__(self):
+        return '{}({})'.format(self.__class__.__name__, self.get_flags())
+
     def __str__(self):
         return ', '.join(self.get_flags())
 

@@ -501,6 +501,34 @@ def test_get_set_flags():
     f.set_flags(b'\x03\x00')  # 0b11
     assert f.get_flags() == ['logout', 'login']
 
+    # ===== Check set_flag/get_flag =====
+    # Check str
+    assert f.get_flags() == ['logout', 'login']
+    f.set_flag('login', 0)
+    assert f.get_flag('login') == 0
+    assert f.get_flags() == ['logout']
+    f.set_flag('profile', 1)
+    assert f.get_flag('profile') == 1
+    assert f.get_flags() == ['logout', 'profile']
+    f.set_flag('bit_2', 0)
+    assert f.get_flag('bit_2') == 0
+    assert f.get_flags() == ['logout']
+    f.set_flag('login', 1)
+    assert f.get_flag('login') == 1
+    assert f.get_flags() == ['logout', 'login']
+
+    # Check int
+    assert f.get_flags() == ['logout', 'login']
+    f.set_flag(1, 0)
+    assert f.get_flag(1) == 0
+    assert f.get_flags() == ['logout']
+    f.set_flag(2, 1)
+    assert f.get_flag(2) == 1
+    assert f.get_flags() == ['logout', 'profile']
+    f.set_flag(2, 0)
+    assert f.get_flag(2) == 0
+    assert f.get_flags() == ['logout']
+
 
 def test_data_types():
     class CustomFlags(BitFlags):

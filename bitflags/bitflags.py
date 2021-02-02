@@ -200,6 +200,41 @@ class BitFlags(ctypes.Union, metaclass=BitFlagsMetaclass):
         for var_name in kwargs:
             setattr(self, var_name, kwargs[var_name])
 
+    def set_flag(self, flag, value=1):
+        """Change the given flag.
+
+        Args:
+            flag (int/str): Bit position (starting at 0) or string flag name.
+            value (int)[1]: Change the flag to this value (0 or 1).
+        """
+        if not isinstance(flag, str):
+            try:
+                flag = self.options[flag]
+            except (KeyError, ValueError, TypeError, Exception):
+                pass
+        if isinstance(flag, int):
+            flag = 'bit_{}'.format(flag)
+
+        setattr(self, str(flag), value)
+
+    def get_flag(self, flag):
+        """Return the given flag's value.
+
+        Args:
+            flag (int/str): Bit position (starting at 0) or string flag name.
+
+        Returns:
+            value (int)[None]: 0 or 1. None if the flag does not exist.
+        """
+        if not isinstance(flag, str):
+            try:
+                flag = self.options[flag]
+            except (KeyError, ValueError, TypeError, Exception):
+                pass
+        if isinstance(flag, int):
+            flag = 'bit_{}'.format(flag)
+        return getattr(self, flag, None)
+
     def set_flags(self, value):
         """Set the bit flags.
 

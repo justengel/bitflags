@@ -2,12 +2,29 @@ import re
 import ctypes
 
 
-__all__ = ['str_to_var_name', 'format_pattern',
+__all__ = ['int_from_bits', 'str_to_var_name', 'format_pattern',
            'order_flag_options', 'order_flag_field', 'order_flag_c_field',
            'dynamicmethod']
 
 
 VARIABLE_NAME_SUB_PATTERN = re.compile('\W')
+
+
+def int_from_bits(*bit_pos):
+    """Combine the given bit positions as an integer where the given bit positions are set to 1.
+
+    Bit positions start at 0.
+
+    Args:
+         *bit_pos (tuple/int): Tuple of integer bit positions where the bit positions start at 0.
+
+    Returns:
+        bits (int): Integer with the bits set.
+    """
+    bits = 0
+    for bit in bit_pos:
+        bits |= (1 << bit)
+    return bits
 
 
 def str_to_var_name(name):

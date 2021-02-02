@@ -504,17 +504,17 @@ def test_get_set_flags():
     # ===== Check set_flag/get_flag =====
     # Check str
     assert f.get_flags() == ['logout', 'login']
-    f.set_flag('login', 0)
-    assert f.get_flag('login') == 0
+    f.set('login', 0)
+    assert f.get('login') == 0
     assert f.get_flags() == ['logout']
-    f.set_flag('profile', 1)
-    assert f.get_flag('profile') == 1
+    f.set('profile', 1)
+    assert f.get('profile') == 1
     assert f.get_flags() == ['logout', 'profile']
     f.set_flag('bit_2', 0)
     assert f.get_flag('bit_2') == 0
     assert f.get_flags() == ['logout']
-    f.set_flag('login', 1)
-    assert f.get_flag('login') == 1
+    f.set('login', 1)
+    assert f.get('login') == 1
     assert f.get_flags() == ['logout', 'login']
 
     # Check int
@@ -522,12 +522,20 @@ def test_get_set_flags():
     f.set_flag(1, 0)
     assert f.get_flag(1) == 0
     assert f.get_flags() == ['logout']
-    f.set_flag(2, 1)
-    assert f.get_flag(2) == 1
+    f.set(2, 1)
+    assert f.get(2) == 1
     assert f.get_flags() == ['logout', 'profile']
-    f.set_flag(2, 0)
-    assert f.get_flag(2) == 0
+    f[2] = 0
+    assert f[2] == 0
     assert f.get_flags() == ['logout']
+
+    # Check get default value
+    try:
+        f.get('nonexisting flag')
+        raise AssertionError('get does not raise error for non existing')
+    except AttributeError:
+        pass  # Should hit here
+    assert f.get('nonexisting flag', None) is None
 
 
 def test_data_types():

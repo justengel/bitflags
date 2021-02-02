@@ -200,41 +200,6 @@ class BitFlags(ctypes.Union, metaclass=BitFlagsMetaclass):
         for var_name in kwargs:
             setattr(self, var_name, kwargs[var_name])
 
-    def set_flag(self, flag, value=1):
-        """Change the given flag.
-
-        Args:
-            flag (int/str): Bit position (starting at 0) or string flag name.
-            value (int)[1]: Change the flag to this value (0 or 1).
-        """
-        if not isinstance(flag, str):
-            try:
-                flag = self.options[flag]
-            except (KeyError, ValueError, TypeError, Exception):
-                pass
-        if isinstance(flag, int):
-            flag = 'bit_{}'.format(flag)
-
-        setattr(self, str(flag), value)
-
-    def get_flag(self, flag):
-        """Return the given flag's value.
-
-        Args:
-            flag (int/str): Bit position (starting at 0) or string flag name.
-
-        Returns:
-            value (int)[None]: 0 or 1. None if the flag does not exist.
-        """
-        if not isinstance(flag, str):
-            try:
-                flag = self.options[flag]
-            except (KeyError, ValueError, TypeError, Exception):
-                pass
-        if isinstance(flag, int):
-            flag = 'bit_{}'.format(flag)
-        return getattr(self, flag, None)
-
     def set_flags(self, value):
         """Set the bit flags.
 
@@ -377,6 +342,55 @@ class BitFlags(ctypes.Union, metaclass=BitFlagsMetaclass):
             byteorder = getattr(self, 'endian', 'big')
         signed = getattr(self, 'signed', False)
         return self.value.to_bytes(self.nbytes, byteorder, signed=signed)
+
+    def __getitem__(self, flag):
+        flag = self._flag_to_attr(flag)
+        if not hasattr(self, flag):
+            raise KeyError('Invalid flag "{}"!'.format(flag))
+        return getattr(self, flag)
+
+    def __setitem__(self, flag, value):
+        flag = self._flag_to_attr(flag)
+        if not hasattr(self, flag):
+            raise KeyError('Invalid flag "{}"!'.format(flag))
+        setattr(self, str(flag), value)
+
+    def _flag_to_attr(self, flag):
+        """Return the attribute name or the given flag."""
+        if not isinstance(flag, str):
+            try:
+                flag = self.options[flag]
+            except (KeyError, ValueError, TypeError, Exception):
+                pass
+        if isinstance(flag, int):
+            flag = 'bit_{}'.format(flag)
+        flag = str(flag)
+        return flag
+
+    def get(self, flag, *default):
+        """Return the given flag's value.
+
+        Args:
+            flag (int/str): Bit position (starting at 0) or string flag name.
+            *default (object)[MISSING]: If given return the default and do not raise an error.
+
+        Returns:
+            value (int)[None]: 0 or 1. None if the flag does not exist.
+        """
+        return getattr(self, self._flag_to_attr(flag), *default)
+
+    def set(self, flag, value=1):
+        """Change the given flag.
+
+        Args:
+            flag (int/str): Bit position (starting at 0) or string flag name.
+            value (int)[1]: Change the flag to this value (0 or 1).
+        """
+        setattr(self, self._flag_to_attr(flag), value)
+
+    # Use get for dict compatibility. Keep old methods.
+    get_flag = get
+    set_flag = set
 
     @dynamicmethod
     def from_flags(cls, value):

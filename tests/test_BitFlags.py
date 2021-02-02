@@ -545,6 +545,19 @@ def test_from_bytes():
     assert bf.value == 0b0000001100000000
 
 
+def test_to_hex_bits():
+    class CustomFlags(BitFlags):
+        options = {0: 'logout', 1: 'login', 2: 'profile', 3: 'Custom Action'}
+        nbytes = 4  # Used in to_hex
+        byteorder = 'big'
+        signed = False
+
+    f = CustomFlags(0b101)
+    assert int(f) == 5, '{} != {}'.format(int(f), 5)
+    assert f.to_hex() == '0x0005', '{} != {}'.format(f.to_hex(), '0x0005')
+    assert f.to_bits() == '0101', '{} != {}'.format(f.to_bits(), '0101')
+
+
 if __name__ == '__main__':
     test_constructor()
     test_nbytes()
@@ -556,4 +569,5 @@ if __name__ == '__main__':
     test_get_set_flags()
     test_data_types()
     test_from_bytes()
+    test_to_hex_bits()
     print("All tests finished successfully!")

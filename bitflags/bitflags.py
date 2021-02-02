@@ -49,7 +49,7 @@ class BitFlagsMetaclass(type(ctypes.Union)):
             # Sort the options
             options = collections.OrderedDict(sorted((order_flag_options(key, value) for key, value in options),
                                                      key=lambda item: item[0]))
-            nbits = max(chain(options.keys(), (1,)))
+            nbits = max(chain(options.keys(), (0,))) + 1
             nbytes = int((nbits + 7) // 8)
 
         # Format the fields which are the variable names mapped to bits
@@ -59,7 +59,7 @@ class BitFlagsMetaclass(type(ctypes.Union)):
                 fields = fields.items()
             fields = collections.OrderedDict(sorted((order_flag_field(key, value) for key, value in fields),
                                                     key=lambda item: item[1]))
-            nbits = max(chain(fields.values(), (1,)))
+            nbits = max(chain(fields.values(), (0,))) + 1
             nbytes = int((nbits + 7) // 8)
 
             if not options:
@@ -304,6 +304,29 @@ class BitFlags(ctypes.Union, metaclass=BitFlagsMetaclass):
                 raise ValueError('Cannot set field %s. The variable name or bit (%i) is invalid.' % (key, bit))
 
     # ===== Type Conversion =====
+    def to_hex(self, fmt=None):
+        """Convert the value to hex.
+
+        Args:
+            fmt (str)[None]: String format "0x{:02X}". If None nbits is used for hex size.
+
+        Returns:
+            hex (str): Integer value converted to hex.
+        """
+        if fmt is None:
+            if self.nbytes <= 2:  # if self.nbits <= 16:
+                fmt = '0x{:02X}'
+            elif self.nbytes <= 4:  # elif self.nbits <= 32:
+                fmt = '0x{:04X}'
+            else:
+                fmt = '0x{:08X}'
+        return fmt.format(int(self))
+
+    def to_bits(self):
+        """Convert the value to a string of bits."""
+        fmt = '{:0' + str(self.nbits) + 'b}'
+        return fmt.format(int(self))
+
     def __int__(self):
         return self.value
 

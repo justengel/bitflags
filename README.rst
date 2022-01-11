@@ -89,7 +89,7 @@ This class was made to be flexible if you want the attributes to be different fr
 
 
     s2 = SpecialFlags(1)
-    assert s.get_flags() == ["2% System Failure"]
+    assert s2.get_flags() == ["2% System Failure"]
 
 
 You can also make a pattern for options.

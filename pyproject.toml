@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "bitflags"
+version = "1.2.0"
+description = "Bit flags implementation using a C Union. This library removes the need to use ctypes and helps you quickly access what bits are toggled."
+readme = "README.rst"
+requires-python = ">= 3.13"
+authors = [
+  {name = "Justin Engel", email = "jtengel08@gmail.com"},
+]
+license = {text = "MIT License"}
+keywords = ["bit", "flags", "Union", "bitflags"]
+classifiers = [
+  # How mature is this project? Common values are
+  #   3 - Alpha
+  #   4 - Beta
+  #   5 - Production/Stable
+  "Development Status :: 4 - Beta",
+
+  # Indicate who your project is intended for
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Build Tools",
+
+  # Pick your license as you wish (see also "license" above)
+  "License :: OSI Approved :: MIT License",
+
+  # Specify the Python versions you support here.
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.13",
+]
+
+
+[project.urls]
+Repository = "https://github.com/justengel/bitflags.git"

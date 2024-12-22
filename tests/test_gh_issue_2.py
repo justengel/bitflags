@@ -2,6 +2,7 @@ from bitflags import BitFlags
 import sys
 
 class MyFlags(BitFlags):
+    case_type = "keep"
     options = {
         0:  'b00',
         1:  'b01',

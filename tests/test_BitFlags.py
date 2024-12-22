@@ -270,8 +270,7 @@ def test_field_options():
     # Fields - variable name, bit mappings
     assert isinstance(CustomFlags.fields, collections.OrderedDict)
     assert list(range(5)) == list(CustomFlags.fields.values())
-    assert CustomFlags.fields == {'logout': 0, 'login': 1, 'profile': 2, 'custom_action': 3,
-                                  '_a_12345_display_name_m': 4}
+    assert CustomFlags.fields == {'logout': 0, 'login': 1, 'profile': 2, 'custom_action': 3, '_a_12345_display_name_m': 4}
 
     # ===== Test Fields: Setting the 'fields' for variable names and display names (list/dict) =====
     class CustomFlags(BitFlags):
@@ -473,6 +472,164 @@ def test_pattern():
     assert hasattr(f, 'b15')
 
 
+def test_pattern_variable_case():
+    class CustomFlags(BitFlags):
+        pattern = 'My BIT%i'
+        nbytes = 2
+        case_type = "lower"  # Default
+
+    assert ctypes.sizeof(CustomFlags) == 2
+
+    f = CustomFlags(0xff)
+    assert ctypes.sizeof(f) == 2
+    assert f.value == 0xff
+    assert f["My BIT0"] == 1
+    assert f.get_flags() == ['My BIT0', 'My BIT1', 'My BIT2', 'My BIT3', 'My BIT4', 'My BIT5', 'My BIT6',
+                             'My BIT7']  # Only flags that are True
+    assert hasattr(f, 'my_bit0')
+    assert hasattr(f, 'my_bit1')
+    assert hasattr(f, 'my_bit2')
+    assert hasattr(f, 'my_bit3')
+    assert hasattr(f, 'my_bit4')
+    assert hasattr(f, 'my_bit5')
+    assert hasattr(f, 'my_bit6')
+    assert hasattr(f, 'my_bit7')
+    assert hasattr(f, 'my_bit8')
+    assert hasattr(f, 'my_bit9')
+    assert hasattr(f, 'my_bit10')
+    assert hasattr(f, 'my_bit11')
+    assert hasattr(f, 'my_bit12')
+    assert hasattr(f, 'my_bit13')
+    assert hasattr(f, 'my_bit14')
+    assert hasattr(f, 'my_bit15')
+
+
+    class CustomFlags(BitFlags):
+        pattern = 'My BIT%i'
+        nbytes = 2
+        case_type = "snake"
+
+    assert ctypes.sizeof(CustomFlags) == 2
+
+    f = CustomFlags(0xff)
+    assert ctypes.sizeof(f) == 2
+    assert f.value == 0xff
+    assert f["My BIT0"] == 1
+    assert f.get_flags() == ['My BIT0', 'My BIT1', 'My BIT2', 'My BIT3', 'My BIT4', 'My BIT5', 'My BIT6',
+                             'My BIT7']  # Only flags that are True
+    assert hasattr(f, 'my_bit_0')
+    assert hasattr(f, 'my_bit_1')
+    assert hasattr(f, 'my_bit_2')
+    assert hasattr(f, 'my_bit_3')
+    assert hasattr(f, 'my_bit_4')
+    assert hasattr(f, 'my_bit_5')
+    assert hasattr(f, 'my_bit_6')
+    assert hasattr(f, 'my_bit_7')
+    assert hasattr(f, 'my_bit_8')
+    assert hasattr(f, 'my_bit_9')
+    assert hasattr(f, 'my_bit_10')
+    assert hasattr(f, 'my_bit_11')
+    assert hasattr(f, 'my_bit_12')
+    assert hasattr(f, 'my_bit_13')
+    assert hasattr(f, 'my_bit_14')
+    assert hasattr(f, 'my_bit_15')
+
+
+    class CustomFlags(BitFlags):
+        pattern = 'My BIT%i'
+        nbytes = 2
+        case_type = "camel"
+
+    assert ctypes.sizeof(CustomFlags) == 2
+
+    f = CustomFlags(0xff)
+    assert ctypes.sizeof(f) == 2
+    assert f.value == 0xff
+    assert f["My BIT0"] == 1
+    assert f.get_flags() == ['My BIT0', 'My BIT1', 'My BIT2', 'My BIT3', 'My BIT4', 'My BIT5', 'My BIT6',
+                             'My BIT7']  # Only flags that are True
+    assert hasattr(f, 'myBit0')
+    assert hasattr(f, 'myBit1')
+    assert hasattr(f, 'myBit2')
+    assert hasattr(f, 'myBit3')
+    assert hasattr(f, 'myBit4')
+    assert hasattr(f, 'myBit5')
+    assert hasattr(f, 'myBit6')
+    assert hasattr(f, 'myBit7')
+    assert hasattr(f, 'myBit8')
+    assert hasattr(f, 'myBit9')
+    assert hasattr(f, 'myBit10')
+    assert hasattr(f, 'myBit11')
+    assert hasattr(f, 'myBit12')
+    assert hasattr(f, 'myBit13')
+    assert hasattr(f, 'myBit14')
+    assert hasattr(f, 'myBit15')
+
+
+    class CustomFlags(BitFlags):
+        pattern = 'My BIT{}'
+        nbytes = 2
+        case_type = "keep"
+
+    assert ctypes.sizeof(CustomFlags) == 2
+
+    f = CustomFlags(0xff)
+    assert ctypes.sizeof(f) == 2
+    assert f.value == 0xff
+    assert f["My BIT0"] == 1
+    assert f.get_flags() == ['My BIT0', 'My BIT1', 'My BIT2', 'My BIT3', 'My BIT4', 'My BIT5', 'My BIT6',
+                             'My BIT7']  # Only flags that are True
+    assert hasattr(f, 'My_BIT0')
+    assert hasattr(f, 'My_BIT1')
+    assert hasattr(f, 'My_BIT2')
+    assert hasattr(f, 'My_BIT3')
+    assert hasattr(f, 'My_BIT4')
+    assert hasattr(f, 'My_BIT5')
+    assert hasattr(f, 'My_BIT6')
+    assert hasattr(f, 'My_BIT7')
+    assert hasattr(f, 'My_BIT8')
+    assert hasattr(f, 'My_BIT9')
+    assert hasattr(f, 'My_BIT10')
+    assert hasattr(f, 'My_BIT11')
+    assert hasattr(f, 'My_BIT12')
+    assert hasattr(f, 'My_BIT13')
+    assert hasattr(f, 'My_BIT14')
+    assert hasattr(f, 'My_BIT15')
+
+
+    class CustomFlags(BitFlags):
+        pattern = 'My BIT {}'
+        pattern_func = lambda i, p: p.format(i + 1).upper().replace(" ", '-')
+        nbytes = 2
+        case_type = "keep"
+
+    assert ctypes.sizeof(CustomFlags) == 2
+
+    f = CustomFlags(0xff)
+    assert ctypes.sizeof(f) == 2
+    assert f.value == 0xff
+    assert f["MY-BIT-1"] == 1
+    assert f.get_flags() == ['MY-BIT-1', 'MY-BIT-2', 'MY-BIT-3', 'MY-BIT-4', 'MY-BIT-5', 'MY-BIT-6', 'MY-BIT-7',
+                             'MY-BIT-8']  # Only flags that are True
+    assert not hasattr(f, 'MY_BIT_0')
+    assert hasattr(f, 'MY_BIT_1')
+    assert hasattr(f, 'MY_BIT_2')
+    assert hasattr(f, 'MY_BIT_3')
+    assert hasattr(f, 'MY_BIT_4')
+    assert hasattr(f, 'MY_BIT_5')
+    assert hasattr(f, 'MY_BIT_6')
+    assert hasattr(f, 'MY_BIT_7')
+    assert hasattr(f, 'MY_BIT_8')
+    assert hasattr(f, 'MY_BIT_9')
+    assert hasattr(f, 'MY_BIT_10')
+    assert hasattr(f, 'MY_BIT_11')
+    assert hasattr(f, 'MY_BIT_12')
+    assert hasattr(f, 'MY_BIT_13')
+    assert hasattr(f, 'MY_BIT_14')
+    assert hasattr(f, 'MY_BIT_15')
+    assert hasattr(f, 'MY_BIT_16')
+
+
 def test_iterator():
     class CustomFlags(BitFlags):
         nbytes = 2
@@ -611,6 +768,7 @@ if __name__ == '__main__':
     test_update_fields()
     test_value_and_bits()
     test_pattern()
+    test_pattern_variable_case()
     test_get_set_flags()
     test_data_types()
     test_from_bytes()

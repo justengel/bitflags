@@ -2,11 +2,13 @@ import re
 import ctypes
 
 
-__all__ = ['int_from_bits', 'str_to_var_name', 'format_pattern',
-           'order_flag_options', 'order_flag_field', 'order_flag_c_field',
+__all__ = ['int_from_bits', 'to_lower_var_name', 'to_snake_case', 'toCamelCase', 'to_keep_case', 'format_pattern',
+           'order_flag_options', 'order_flag_field',
            'dynamicmethod']
 
 
+FIND_WORDS_RE = re.compile(r'[A-Z]?[a-z]+|[A-Z]{2,}(?=[A-Z][a-z]|\d|\W|$)|\d+')
+CLEAN_START_RE = re.compile(r"^[\W|\d]+")
 VARIABLE_NAME_SUB_PATTERN = re.compile(r'\W')
 
 
@@ -27,7 +29,7 @@ def int_from_bits(*bit_pos):
     return bits
 
 
-def str_to_var_name(name):
+def to_lower_var_name(name):
     """Convert a string to a proper variable name.
 
     Example:
@@ -56,7 +58,30 @@ def str_to_var_name(name):
     return var_name
 
 
-def format_pattern(bit, pattern):
+def to_snake_case(name: str) -> str:
+    """Convert a name to a snake_case variable name."""
+    clean_start = CLEAN_START_RE.sub("", name)
+    words = re.findall(FIND_WORDS_RE, clean_start)
+    return '_'.join(map(str.lower, words))
+
+
+def toCamelCase(name: str) -> str:
+    """Convert a name to a camelCase variable name."""
+    clean_start = CLEAN_START_RE.sub("", name)
+    words = re.findall(FIND_WORDS_RE, clean_start)
+    try:
+        return ''.join([words[0].lower(), *map(str.title, words[1:])])
+    except IndexError:
+        return ''
+
+
+def to_keep_case(name: str) -> str:
+    clean_start = CLEAN_START_RE.sub("", name)
+    var_name = VARIABLE_NAME_SUB_PATTERN.sub("_", clean_start).replace("__", "_").rstrip("_")
+    return var_name
+
+
+def format_pattern(bit: int, pattern: str) -> str:
     """Return a string that is formatted with the given bit using either % or .format on the given pattern."""
     try:
         if "%" in pattern:
@@ -88,41 +113,20 @@ def order_flag_options(key, value):
     return bit, name
 
 
-def order_flag_field(key, value):
+def order_flag_field(key, value, case_func):
     """Return the fields key value pairs in the correct order (name (str), bit (int)).
 
     Args:
         key (int/str): Bit int or name.
         value (str/int): Name or bit int.
+        case_func (callable): Convert a string to variable name.
 
     Returns:
         field (tuple): (name (str), bit (int))
     """
     bit, name = order_flag_options(key, value)
-    var_name = str_to_var_name(name)
+    var_name = case_func(name)
     return var_name, bit
-
-
-def order_flag_c_field(bit_pos, options=None):
-    """Return the little endian field.
-
-    Note:
-        By default the variable name is the found option name in snake case ('Hello World' becomes 'hello_world')
-        or 'bit_0', 'bit_1', 'bit_2' ...
-
-    Args:
-        bit_pos (int): Index of the bit field. This starts at 0.
-        options (dict)[None]: Dictionary of bit flags (bit, name) value pairs.
-
-    Returns:
-        field (tuple): (Variable name, ctypes.c_uint8, 1) This needs to be in order
-    """
-    if options is None:
-        var_name = 'bit_' + str(bit_pos)
-    else:
-        name = options.get(bit_pos, '')
-        var_name = str_to_var_name(name) or 'bit_' + str(bit_pos)
-    return var_name, ctypes.c_uint8, 1
 
 
 class dynamicmethod(object):

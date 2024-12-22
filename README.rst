@@ -12,6 +12,71 @@ This library includes a class based approach to bit flags (BitFlags) and a one t
 
 The individual bits can always be accessed with 'flag.bit_0', 'flag.bit_1', 'flag.bit_2', ...
 
+Update
+======
+
+As of version 1.2.0, the default variable name case can changed.
+
+.. code-block:: python
+
+
+    from bitflags import BitFlags
+
+    class MyFlags(BitFlags):
+        options = {0: "flag1", 1: "flag2", 2: "flag3", 3: "flag4", 4: "Something Happened"}
+
+    # Access the custom flags as attributes
+    f = MyFlags(0b101)
+    assert f.flag1 == 1
+    assert f.flag2 == 0
+    assert f.flag3 == 1
+    assert f.flag4 == 0
+    assert f.something_happened == 0
+
+
+    class MyFlags(BitFlags):
+        case_type = "snake"
+        options = {0: "flag1", 1: "flag2", 2: "flag3", 3: "flag4", 4: "Something Happened"}
+
+
+    # Access the custom flags as attributes
+    f = MyFlags(0b101)
+    assert f.flag_1 == 1
+    assert f.flag_2 == 0
+    assert f.flag_3 == 1
+    assert f.flag_4 == 0
+    assert f.something_happened == 0
+
+    class MyFlags(BitFlags):
+        case_func = lambda name: name.upper().replace(" ", "_")
+        options = {0: "flag1", 1: "flag2", 2: "flag3", 3: "flag4", 4: "Something Happened"}
+
+    # Access the custom flags as attributes
+    f = MyFlags(0b101)
+    assert f.FLAG1 == 1
+    assert f.FLAG2 == 0
+    assert f.FLAG3 == 1
+    assert f.FLAG4 == 0
+    assert f.SOMETHING_HAPPENED == 0
+
+You can now access values by the option name.
+
+.. code-block:: python
+
+
+    from bitflags import BitFlags
+
+    class MyFlags(BitFlags):
+        options = {0: "flag1", 1: "flag2", 2: "flag3", 3: "flag4", 4: "Something Happened"}
+
+    # Access the custom flags by option name
+    f = MyFlags(0b101)
+    assert f["flag1"] == 1
+    assert f["flag2"] == 0
+    assert f["flag3"] == 1
+    assert f["flag4"] == 0
+    assert f["Something Happened"] == 0
+
 
 Example - BitFlags
 ==================

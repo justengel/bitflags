@@ -25,6 +25,10 @@ def test_bitflags():
     f.value = 0b11
 
     assert f.value == 0b11
+    assert f.bit_0 == 1
+    assert f.bit_1 == 1
+    assert f.bit_2 == 0
+    assert f.bit_3 == 0
     assert f.logout == f.bit_0
     assert f.login == f.bit_1
     assert f.profile == f.bit_2
@@ -62,10 +66,27 @@ def test_bitflags():
 def test_kwargs():
     f = bitflags(flag1=1, flag2=0, flag3=3, options={0: 'flag1', 1: 'flag2', 2: 'flag3'})
     assert f.value == 0b101
+    assert f['flag1'] == f.bit_0
+    assert f['flag2'] == f.bit_1
+    assert f['flag3'] == f.bit_2
     assert f.flag1 == f.bit_0
+    assert f.flag2 == f.bit_1
+    assert f.flag3 == f.bit_2
     assert f.flag1 == 1
     assert f.flag2 == 0
     assert f.flag3 == 1
+
+    f = bitflags(flag_1=1, flag_2=0, flag_3=3, options={0: 'flag1', 1: 'flag2', 2: 'flag3'}, case_type="snake")
+    assert f.value == 0b101
+    assert f['flag1'] == f.bit_0
+    assert f['flag2'] == f.bit_1
+    assert f['flag3'] == f.bit_2
+    assert f.flag_1 == f.bit_0
+    assert f.flag_2 == f.bit_1
+    assert f.flag_3 == f.bit_2
+    assert f.flag_1 == 1
+    assert f.flag_2 == 0
+    assert f.flag_3 == 1
 
 
 def test_set_fields():

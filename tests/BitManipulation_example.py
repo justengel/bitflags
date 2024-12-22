@@ -83,3 +83,9 @@ print( "a: %i" % flags.a)
 print( "b:  %i" % flags.b)
 print( "c   :  %i" % flags.c)
 print( "d  : %i" % flags.d)
+
+# a: 0
+# a: 0
+# b:  1
+# c   :  0
+# d  : 0

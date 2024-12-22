@@ -7,7 +7,7 @@ __all__ = ['int_from_bits', 'str_to_var_name', 'format_pattern',
            'dynamicmethod']
 
 
-VARIABLE_NAME_SUB_PATTERN = re.compile('\W')
+VARIABLE_NAME_SUB_PATTERN = re.compile(r'\W')
 
 
 def int_from_bits(*bit_pos):

@@ -30,7 +30,10 @@ print('bit_2', f.bit_2)
 print('v2', f.v2)
 
 print('from_buffer')
-f2 = _FlagBits.from_buffer_copy(bytes([0b00000111, 0b00111111, 0b00000000, 0b00000000, 0b00010000]))
+if ctypes.sizeof(_FlagBits) == 6:
+    f2 = _FlagBits.from_buffer_copy(bytes([0b00000111, 0b00111111, 0b00000000, 0b00000000, 0b00010000, 0]))
+else:
+    f2 = _FlagBits.from_buffer_copy(bytes([0b00000111, 0b00111111, 0b00000000, 0b00000000, 0b00010000]))
 print('bit_1', f2.bit_1)
 print('value', f2.value)
 print('v', f2.v)

@@ -124,17 +124,19 @@ class BitFlagsMetaclass(type(ctypes.Union)):
             attrs['signed'] = False
 
         # Create the new class
-        new_cls = super().__new__(mcls, name, bases, attrs)
+        new_cls = type.__new__(mcls, name, bases, attrs)
+        return new_cls
+    
+    def __init__(cls, name, bases, attrs):
+        super().__init__(name, bases, attrs)
 
         # Set the fields as attributes
-        for var_name, bit in fields.items():
+        for var_name, bit in cls.fields.items():
             try:
                 # Cannot set the variable name if it starts with a number
-                setattr(new_cls, var_name, getattr(new_cls, 'bit_'+str(bit)))
+                setattr(cls, var_name, getattr(cls, 'bit_'+str(bit)))
             except:
                 pass
-
-        return new_cls
 
 
 class BitFlags(ctypes.Union, metaclass=BitFlagsMetaclass):
@@ -172,7 +174,7 @@ class BitFlags(ctypes.Union, metaclass=BitFlagsMetaclass):
         signed (bool)[False]: Key word argument for when converting to bytes.
     """
 
-    _anonymous_ = ("bit",)
+    _anonymous_ = ("bit",)  # Matches _fields_ "bit"
     _fields_ = [
                 ("bit", FlagBits8),
                 ("value", ctypes.c_uint8)
@@ -185,7 +187,8 @@ class BitFlags(ctypes.Union, metaclass=BitFlagsMetaclass):
             value (int/str)[0]: Initial value.
             kwargs (dict): Dictionary of Initial values for the fields. 'bit_0=1', 'bit_1=1', 'my_flag'=1, ...
         """
-        return super().__new__(cls, value=value)
+        new_cls = super().__new__(cls, value=value)
+        return new_cls
 
     def __init__(self, value=0, **kwargs):
         """Create a new dynamic BitFlags class and instance.

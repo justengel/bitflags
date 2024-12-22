@@ -156,10 +156,12 @@ def check_field_override():
     f.bit_0 = 1
     f.bit_1 = 0
     f.bit_2 = 1
+    print("Checking field override:")
     for i in range(8):
         print(i, getattr(f, 'bit_{}'.format(i)))
     print()
 
+    print("Cannot override _fields_:")
     f._fields_ = [('field_{}'.format(i), ctypes.c_uint8, 1) for i in range(8)]
     for i in range(8):
         print(i, getattr(f, 'field_{}'.format(i), None))
@@ -218,8 +220,8 @@ def check_union_fields():
 
 
 if __name__ == '__main__':
-    # check_sizes()
-    # check_union_size()
+    check_sizes()
+    check_union_size()
 
-    # check_field_override()
+    check_field_override()
     check_union_fields()

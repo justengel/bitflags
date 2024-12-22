@@ -1,4 +1,5 @@
 import collections
+import ctypes
 import time
 
 from bitflags import BitFlags
@@ -8,6 +9,7 @@ def test_constructor():
     class CustomFlags(BitFlags):
         options = {0: 'logout', 1: 'login', 2: 'profile', 3: 'Custom Action'}
 
+    assert ctypes.sizeof(CustomFlags) == 1
     assert CustomFlags.nbytes == 1, CustomFlags.nbytes
     assert hasattr(CustomFlags, 'bit_0')
     assert hasattr(CustomFlags, 'bit_1')
@@ -106,6 +108,7 @@ def test_nbytes():
         nbytes = 2
         options = {0: 'logout', 1: 'login', 2: 'profile', 3: 'Custom Action'}
 
+    assert ctypes.sizeof(CustomFlags) == 2
     assert CustomFlags.nbytes == 2
     assert hasattr(CustomFlags, 'bit_0')
     assert hasattr(CustomFlags, 'bit_1')
@@ -175,7 +178,7 @@ def test_nbits():
         options = {0: 'logout', 1: 'login', 2: 'profile', 3: 'Custom Action'}
 
     assert CustomFlags.nbits == 10
-
+    assert ctypes.sizeof(CustomFlags) == 2
     assert CustomFlags.nbytes == 2
     assert hasattr(CustomFlags, 'bit_0')
     assert hasattr(CustomFlags, 'bit_1')
@@ -426,7 +429,10 @@ def test_pattern():
     class CustomFlags(BitFlags):
         pattern = '%i'
 
+    assert ctypes.sizeof(CustomFlags) == 1
+
     f = CustomFlags(0xff)
+    assert ctypes.sizeof(f) == 1
     assert f.value == 0xff
     assert f.get_flags() == ['0', '1', '2', '3', '4', '5', '6', '7']
 
@@ -443,9 +449,12 @@ def test_pattern():
         pattern = 'B%i'
         nbytes = 2
 
+    assert ctypes.sizeof(CustomFlags) == 2
+
     f = CustomFlags(0xff)
+    assert ctypes.sizeof(f) == 2
     assert f.value == 0xff
-    assert f.get_flags() == ['B0', 'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7']
+    assert f.get_flags() == ['B0', 'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7']  # Only flags that are True
     assert hasattr(f, 'b0')
     assert hasattr(f, 'b1')
     assert hasattr(f, 'b2')

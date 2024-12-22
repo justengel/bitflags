@@ -35,3 +35,6 @@ classifiers = [
 
 [project.urls]
 Repository = "https://github.com/justengel/bitflags.git"
+
+[bdist_wheel]
+universal=1

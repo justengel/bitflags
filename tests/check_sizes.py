@@ -126,29 +126,34 @@ class UFlagBits129(ctypes.Union):
 
 
 def check_sizes():
-    print('Flag 1 Size:', sys.getsizeof(_FlagBits1), sys.getsizeof(_FlagBits1()))
-    print('Flag 8 Size:', sys.getsizeof(_FlagBits8), sys.getsizeof(_FlagBits8()))
-    print('Flag 9 Size:', sys.getsizeof(_FlagBits9), sys.getsizeof(_FlagBits9()))
-    print('Flag 16 Size:', sys.getsizeof(_FlagBits16), sys.getsizeof(_FlagBits16()))
-    print('Flag 24 Size:', sys.getsizeof(_FlagBits24), sys.getsizeof(_FlagBits24()))
-    print('Flag 32 Size:', sys.getsizeof(_FlagBits32), sys.getsizeof(_FlagBits32()))
-    print('Flag 64 Size:', sys.getsizeof(_FlagBits64), sys.getsizeof(_FlagBits64()))
-    print('Flag 96 Size:', sys.getsizeof(_FlagBits96), sys.getsizeof(_FlagBits96()))
-    print('Flag 128 Size:', sys.getsizeof(_FlagBits128), sys.getsizeof(_FlagBits128()))
-    print('Flag 129 Size:', sys.getsizeof(_FlagBits129), sys.getsizeof(_FlagBits129()))
+    # sizeof = sys.getsizeof
+    sizeof = ctypes.sizeof
+
+    print('Flag 1 Size:', sizeof(_FlagBits1), sizeof(_FlagBits1()))
+    print('Flag 8 Size:', sizeof(_FlagBits8), sizeof(_FlagBits8()))
+    print('Flag 9 Size:', sizeof(_FlagBits9), sizeof(_FlagBits9()))
+    print('Flag 16 Size:', sizeof(_FlagBits16), sizeof(_FlagBits16()))
+    print('Flag 24 Size:', sizeof(_FlagBits24), sizeof(_FlagBits24()))
+    print('Flag 32 Size:', sizeof(_FlagBits32), sizeof(_FlagBits32()))
+    print('Flag 64 Size:', sizeof(_FlagBits64), sizeof(_FlagBits64()))
+    print('Flag 96 Size:', sizeof(_FlagBits96), sizeof(_FlagBits96()))
+    print('Flag 128 Size:', sizeof(_FlagBits128), sizeof(_FlagBits128()))
+    print('Flag 129 Size:', sizeof(_FlagBits129), sizeof(_FlagBits129()))
 
 
 def check_union_size():
-    print('Flag 1 Size:', sys.getsizeof(UFlagBits1), sys.getsizeof(UFlagBits1()))
-    print('Flag 8 Size:', sys.getsizeof(UFlagBits8), sys.getsizeof(UFlagBits8()))
-    print('Flag 9 Size:', sys.getsizeof(UFlagBits9), sys.getsizeof(UFlagBits9()))
-    print('Flag 16 Size:', sys.getsizeof(UFlagBits16), sys.getsizeof(UFlagBits16()))
-    print('Flag 24 Size:', sys.getsizeof(UFlagBits24), sys.getsizeof(UFlagBits24()))
-    print('Flag 32 Size:', sys.getsizeof(UFlagBits32), sys.getsizeof(UFlagBits32()))
-    print('Flag 64 Size:', sys.getsizeof(UFlagBits64), sys.getsizeof(UFlagBits64()))
-    print('Flag 96 Size:', sys.getsizeof(UFlagBits96), sys.getsizeof(UFlagBits96()))
-    print('Flag 128 Size:', sys.getsizeof(UFlagBits128), sys.getsizeof(UFlagBits128()))
-    print('Flag 129 Size:', sys.getsizeof(UFlagBits129), sys.getsizeof(UFlagBits129()))
+    # sizeof = sys.getsizeof
+    sizeof = ctypes.sizeof
+    print('Union Flag 1 Size:', sizeof(UFlagBits1), sizeof(UFlagBits1()))
+    print('Union Flag 8 Size:', sizeof(UFlagBits8), sizeof(UFlagBits8()))
+    print('Union Flag 9 Size:', sizeof(UFlagBits9), sizeof(UFlagBits9()))
+    print('Union Flag 16 Size:', sizeof(UFlagBits16), sizeof(UFlagBits16()))
+    print('Union Flag 24 Size:', sizeof(UFlagBits24), sizeof(UFlagBits24()))
+    print('Union Flag 32 Size:', sizeof(UFlagBits32), sizeof(UFlagBits32()))
+    print('Union Flag 64 Size:', sizeof(UFlagBits64), sizeof(UFlagBits64()))
+    print('Union Flag 96 Size:', sizeof(UFlagBits96), sizeof(UFlagBits96()))
+    print('Union Flag 128 Size:', sizeof(UFlagBits128), sizeof(UFlagBits128()))
+    print('Union Flag 129 Size:', sizeof(UFlagBits129), sizeof(UFlagBits129()))
 
 
 def check_field_override():
